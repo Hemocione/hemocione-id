@@ -1,5 +1,6 @@
-const { user } = require('../db/models');
-const { generateHashPassword, compareHashPassword } = require('../utils/hash');
+const { user } = require('../../db/models');
+const { generateHashPassword, compareHashPassword } = require('../../utils/hash');
+import { UserNotFoundError, InvalidPasswordError } from "../../errors/AuthErrors";
 
 const registerUser = async (userData) => {
   const desiredData = { givenName, surName, document, phone, bloodType, birthDate, email, password, gender, image }
@@ -14,10 +15,10 @@ const registerUser = async (userData) => {
 const login = async (email, password) => {
   const user = await user.findOne({ where: { email } });
   if (!user) {
-    throw new Error('Usuário não encontrado');
+    throw new UserNotFoundError();
   }
   if (!await compareHashPassword(password, user.password)) {
-    throw new Error('Senha incorreta');
+    throw new InvalidPasswordError();
   }
   return user;
 }
