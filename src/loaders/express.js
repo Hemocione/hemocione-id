@@ -23,7 +23,7 @@ const init = ({ expressApp: app }) =>
     app.use(mongoSanitize());
 
     //loads every route file
-    glob("../routes/**/*.js", (err, files) => {
+    glob("./src/routes/**/*.js", (err, files) => {
       files.map((file) => {
         const r = require(`../routes/${file.slice(0, -3)}`);
         app.use(r.url, r.router);
