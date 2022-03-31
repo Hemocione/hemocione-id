@@ -1,5 +1,5 @@
 const express = require("express");
-const fs = require("fs");
+const glob = require("glob");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
@@ -23,14 +23,12 @@ const init = ({ expressApp: app }) =>
     app.use(mongoSanitize());
 
     //loads every route file
-    try {
-      fs.readdirSync("./src/routes").forEach((file) => {
+    glob("../routes/**/*.js", (err, files) => {
+      files.map((file) => {
         const r = require(`../routes/${file.slice(0, -3)}`);
         app.use(r.url, r.router);
-      });
-    } catch (err) {
-      reject(err);
-    }
+      }
+    )})
     //404 error handler middleware
     app.use(function (req, res, next) {
       res.status(404).json({ error: "Route NOT FOUND" });

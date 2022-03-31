@@ -12,11 +12,9 @@ router.post("/login", async (req, res, next) => {
     const token = signUser(user)
     res.status(200).json({ user: user, token: token });
   } catch(e) {
-    if (e instanceof AuthError) {
-      res.status(401).json({ message: e.message });
-    } else {
-      next(e);
-    }
+    if (e instanceof AuthError)
+      return res.status(401).json({ message: e.message });
+    next(e);
   }
 });
 
@@ -26,11 +24,9 @@ router.post("/register", async (req, res, next) => {
     const token = signUser(user)
     res.status(200).json({ user: user, token: token });
   } catch(e) {
-    if (e instanceof AuthError) {
-      res.status(401).json({ message: e.message });
-    } else {
-      next(e);
-    }
+    if (e instanceof AuthError)
+      return res.status(401).json({ message: e.message });
+    next(e);
   }
 });
 
