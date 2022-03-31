@@ -29,7 +29,8 @@ module.exports = {
       },
       email: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
       },
       emailVerified: {
         defaultValue: false,
@@ -41,7 +42,8 @@ module.exports = {
       },
       document: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
       },
       phone: {
         type: Sequelize.STRING
@@ -56,6 +58,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      isAdmin: {
+        defaultValue: false,
+        type: Sequelize.BOOLEAN
       }
     });
   },

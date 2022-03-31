@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     document: DataTypes.STRING,
     phone: DataTypes.STRING,
-    gender: DataTypes.ENUM('M', 'F', 'O')
+    gender: DataTypes.ENUM('M', 'F', 'O'),
+    isAdmin: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'user',
