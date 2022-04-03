@@ -1,6 +1,5 @@
 require('dotenv').config();
-console.log('coco')
-console.log(process.env.ENV)
+
 module.exports = { 
   local: {
     use_env_variable: 'DATABASE_URL',
