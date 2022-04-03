@@ -1,18 +1,19 @@
 const { user } = require('../db/models');
 const { generateHashPassword, compareHashPassword } = require('../utils/hash');
+const { selectObjKeys } = require('../utils/selectObjKeys'); 
 const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData } = require("../errors/authErrors");
 const { ValidationError } = require('sequelize');
 
 const register = async (userData) => {
   // not using image for now
   const desiredKeys = ['givenName', 'surName', 'document', 'phone', 'bloodType', 'birthDate', 'email', 'password', 'gender']
-  const filteredUserData = Object.fromEntries(Object.entries(userData).filter(([key]) => desiredKeys.includes(key)));
+  const filteredUserParams = selectObjKeys(userData, desiredKeys)
   try {
     const createdUser = await user.create({
-      ...filteredUserData,
-      password: await generateHashPassword(filteredUserData.password)
-    })
-    return createdUser;
+      ...filteredUserParams,
+      password: await generateHashPassword(filteredUserParams.password)
+    });
+    return createdUser
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
     if (e instanceof ValidationError) {
