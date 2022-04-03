@@ -1,26 +1,33 @@
-const CustomError = require('./customError')
+const { CustomAPIError } = require('./customAPIError')
 
-class AuthError extends CustomError {}
+class AuthError extends CustomAPIError {
+  constructor(name, message, statusCode) {
+    super(name, message, statusCode, 'AuthError');
+  }
+}
 
 class UserNotFoundError extends AuthError {
-  constructor() {
-    super('Usuário não encontrado.');
-    this.name = "UserNotFoundError";
+  constructor(message='Usuário não encontrado.') {
+    super("UserNotFoundError", message, 404);
   }
 }
 
 class InvalidPasswordError extends AuthError {
-  constructor() {
-    super('Senha incorreta.');
-    this.name = "InvalidPasswordError";
+  constructor(message='Senha incorreta.') {
+    super("InvalidPasswordError", message, 401);
   }
 }
 
-class UserRegistrationError extends AuthError {
-  constructor(registrationErrorMessage) {
-    super(registrationErrorMessage);
-    this.name = "UserRegistrationError";
+class InvalidUserParamsError extends AuthError {
+  constructor(message) {
+    super("InvalidUserParamsError", message, 422);
   }
 }
 
-module.exports = { UserNotFoundError, InvalidPasswordError, AuthError };
+class InvalidTokenData extends AuthError {
+  constructor(message="Token inválido.") {
+    super("InvalidTokenData", message, 401);
+  }
+}
+
+module.exports = { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData, AuthError };
