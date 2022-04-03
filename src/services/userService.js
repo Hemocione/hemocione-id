@@ -17,7 +17,6 @@ const register = async (userData) => {
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
     if (e instanceof ValidationError) {
-      console.log(InvalidPasswordError);
       throw new InvalidUserParamsError(e.errors.map((error) => error.message).join(', '));
     }
     throw e;
