@@ -1,6 +1,6 @@
 const { user } = require('../db/models');
 const { generateHashPassword, compareHashPassword } = require('../utils/hash');
-const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData } = "../errors/authErrors";
+const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData } = require("../errors/authErrors");
 const { ValidationError } = require('sequelize');
 
 const register = async (userData) => {
@@ -16,6 +16,7 @@ const register = async (userData) => {
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
     if (e instanceof ValidationError) {
+      console.log(InvalidPasswordError);
       throw new InvalidUserParamsError(e.errors.map((error) => error.message).join(', '));
     }
     throw e;

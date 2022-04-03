@@ -22,23 +22,25 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'O nome não pode ser vazio.'
+          msg: 'O nome não pode ser vazio'
         },
         notNull: {
-          msg: 'O nome não pode ser vazio.'
+          msg: 'O nome não pode ser vazio'
         }
-      }
+      },
+      allowNull: false,
     },
     surName: {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: 'O sobrenome não pode ser vazio.'
+          msg: 'O sobrenome não pode ser vazio'
         },
         notNull: {
-          msg: 'O sobrenome não pode ser vazio.'
+          msg: 'O sobrenome não pode ser vazio'
         },
-      }
+      },
+      allowNull: false
     },
     image: { 
       type: DataTypes.STRING,
@@ -49,12 +51,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isIn: {
           args: [['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']],
-          msg: 'Tipo sanguíneo inválido.'
+          msg: 'Tipo sanguíneo inválido'
         }
       },
       notNull: {
         msg: 'Tipo sanguíneo não pode ser vazio'
-      }
+      },
+      allowNull: false
     },
     birthDate: {
       type: DataTypes.DATE,
@@ -62,13 +65,14 @@ module.exports = (sequelize, DataTypes) => {
         isDate: {
           msg: 'Data de nascimento inválida'
         },
+        notEmpty: {
+          msg: 'Data de nascimento não pode ser vazia'
+        },
+        notNull: {
+          msg: 'Data de nascimento não pode ser vazia'
+        },
       },
-      notEmpty: {
-        msg: 'Data de nascimento não pode ser vazia'
-      },
-      notNull: {
-        msg: 'Data de nascimento não pode ser vazia'
-      }
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
@@ -83,15 +87,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       notNull: {
         msg: 'Email não pode ser vazio'
-      }
+      },
+      allowNull: false
     },
     emailVerified: DataTypes.BOOLEAN,
     password: { 
       type: DataTypes.STRING,
       validate: {
-        len: {
-          args: [8, 100],
-          msg: 'Senha deve ter no mínimo 8 caracteres'
+        notEmpty: {
+          msg: 'Senha não pode ser vazia'
         },
         notNull: {
           msg: 'Senha não pode ser vazia'
@@ -110,18 +114,26 @@ module.exports = (sequelize, DataTypes) => {
       },
       unique: {
         args: true,
-        msg: 'CPF já cadastrado.'
+        msg: 'CPF já cadastrado'
       },
       notNull: {
         msg: 'CPF não pode ser vazio'  
-      }
+      },
+      allowNull: false
     },
     phone: DataTypes.STRING,
     gender: {
       type: DataTypes.ENUM('M', 'F', 'O'),
       validate: {
-        isIn: [['M', 'F', 'O']]
+        isIn: {
+          args: [['M', 'F', 'O']],
+          msg: "Gênero precisa ser do tipo [M, F, O]"
+        },
+        notNull: {
+          msg: "Gênero precisa ser do tipo [M, F, O]"
+        },
       },
+      allowNull: false
     },
     isAdmin: DataTypes.BOOLEAN
   }, {
