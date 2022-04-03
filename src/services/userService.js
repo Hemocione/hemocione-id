@@ -16,7 +16,7 @@ const register = async (userData) => {
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
     if (e instanceof ValidationError) {
-      throw new InvalidUserParamsError(e.errors[0].message);
+      throw new InvalidUserParamsError(e.errors.map((error) => error.message).join(', '));
     }
     throw e;
   }
@@ -40,4 +40,4 @@ const login = async (email, password) => {
   return user;
 }
 
-module.exports = { register, login };
+module.exports = { register, login, validateUserTokenData };

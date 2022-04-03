@@ -19,7 +19,7 @@ class InvalidPasswordError extends AuthError {
 }
 
 class InvalidUserParamsError extends AuthError {
-  constructor(message) {
+  constructor(message="Parâmetros de usuário inválidos.") {
     super("InvalidUserParamsError", message, 422);
   }
 }

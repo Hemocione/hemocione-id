@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: {
           msg: 'O nome não pode ser vazio.'
+        },
+        notNull: {
+          msg: 'O nome não pode ser vazio.'
         }
       }
     },
@@ -31,7 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: {
           msg: 'O sobrenome não pode ser vazio.'
-        }
+        },
+        notNull: {
+          msg: 'O sobrenome não pode ser vazio.'
+        },
       }
     },
     image: { 
@@ -43,30 +49,54 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isIn: {
           args: [['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']],
-        },
-      allowNull: false
+          msg: 'Tipo sanguíneo inválido.'
+        }
+      },
+      notNull: {
+        msg: 'Tipo sanguíneo não pode ser vazio'
       }
     },
     birthDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      validate: {
+        isDate: {
+          msg: 'Data de nascimento inválida'
+        },
+      },
+      notEmpty: {
+        msg: 'Data de nascimento não pode ser vazia'
+      },
+      notNull: {
+        msg: 'Data de nascimento não pode ser vazia'
+      }
     },
     email: {
       type: DataTypes.STRING,
       validate: {
         isEmail: {
-          msg: 'Email inválido.'
+          msg: 'Email inválido'
         }
       },
       unique: {
         args: true,
-        msg: 'Email já cadastrado.'
+        msg: 'Email já cadastrado'
       },
-      allowNull: false
+      notNull: {
+        msg: 'Email não pode ser vazio'
+      }
     },
     emailVerified: DataTypes.BOOLEAN,
     password: { 
       type: DataTypes.STRING,
+      validate: {
+        len: {
+          args: [8, 100],
+          msg: 'Senha deve ter no mínimo 8 caracteres'
+        },
+        notNull: {
+          msg: 'Senha não pode ser vazia'
+        }
+      },
       allowNull: false
     },
     document: {
@@ -74,7 +104,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isValidCPF (value) {
           if (!validateCPF(value)) {
-            throw new Error('CPF inválido.')
+            throw new Error('CPF inválido')
           }
         }
       },
@@ -82,7 +112,9 @@ module.exports = (sequelize, DataTypes) => {
         args: true,
         msg: 'CPF já cadastrado.'
       },
-      allowNull: false,
+      notNull: {
+        msg: 'CPF não pode ser vazio'  
+      }
     },
     phone: DataTypes.STRING,
     gender: {
