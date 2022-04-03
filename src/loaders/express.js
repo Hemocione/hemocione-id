@@ -1,8 +1,10 @@
 const express = require("express");
-const glob = require("glob");
+const fs = require("fs");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
+const requestsLogging = require("../middlewares/requestsLogging");
+const { errorsMiddleware, notFoundRoute } = require("../middlewares/errorsMiddleware");
 const xssEscape = require("../middlewares/xssEscape");
 const contentType = require("../middlewares/contentType");
 
@@ -13,6 +15,7 @@ const init = ({ expressApp: app }) =>
       origin: "*",
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     };
+    app.use(requestsLogging);
     app.use(cors(corsOptions));
     app.use(contentType);
     app.use(express.json());
@@ -23,21 +26,17 @@ const init = ({ expressApp: app }) =>
     app.use(mongoSanitize());
 
     //loads every route file
-    glob("./src/routes/**/*.js", (err, files) => {
-      files.map((file) => {
+    try {
+      fs.readdirSync("./src/routes").forEach((file) => {
         const r = require(`../routes/${file.slice(0, -3)}`);
         app.use(r.url, r.router);
-      }
-    )})
-    //404 error handler middleware
-    app.use(function (req, res, next) {
-      res.status(404).json({ error: "Route NOT FOUND" });
-    });
+      });
+    } catch (err) {
+      reject(err);
+    }
 
-    //Uncaught error handler middleware
-    app.use(function (err, req, res, next) {
-      res.status(500).send({ error: "Unexpected Error" });
-    });
+    app.use(errorsMiddleware);
+    app.use(notFoundRoute);
     resolve();
   });
 
