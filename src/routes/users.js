@@ -19,7 +19,7 @@ router.post("/register", wrapAsyncOperationalErrors(async (req, res, next) => {
   res.status(200).json({ user: user, token: token });
 }));
 
-router.get("/validateUserToken", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
+router.get("/validate-token", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
   const userData = req.authUser;
   await userService.validateUserTokenData(userData);
   res.status(200).json({ message: "Token válido.", user: userData });

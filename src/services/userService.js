@@ -24,8 +24,8 @@ const register = async (userData) => {
 }
 
 const validateUserTokenData = async (userData) => {
-  const user = await user.findOne({ where: { id: userData.id, isAdmin: userData.mainRole === 'admin' } });
-  if (!user) {
+  const validUser = await user.findOne({ where: { id: userData.id, isAdmin: userData.isAdmin, email: userData.email } });
+  if (!validUser) {
     throw new InvalidTokenData();
   }
 }
