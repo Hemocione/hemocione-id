@@ -14,11 +14,9 @@ router.post("/login", wrapAsyncOperationalErrors(async (req, res, next) => {
 }));
 
 router.post("/register", wrapAsyncOperationalErrors(async (req, res, next) => {
-  let user = await userService.register(req.body);
-  user = user.dataValues
+  const user = await userService.register(req.body);
   const token = signUser(user)
-  const exposedUserKeys = ['id', 'givenName', 'surName', 'document', 'phone', 'bloodType', 'birthDate', 'email']
-  res.status(200).json({ user: selectObjKeys(user, exposedUserKeys), token: token });
+  res.status(200).json({ user: user, token: token });
 }));
 
 router.get("/validateUserToken", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {

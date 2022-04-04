@@ -13,7 +13,7 @@ const register = async (userData) => {
       ...filteredUserParams,
       password: await generateHashPassword(filteredUserParams.password)
     });
-    return createdUser
+    return createdUser.publicDataValues();
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
     if (e instanceof ValidationError) {
@@ -31,14 +31,14 @@ const validateUserTokenData = async (userData) => {
 }
 
 const login = async (email, password) => {
-  const user = await user.findOne({ where: { email } });
-  if (!user) {
+  const loggedInUser = await user.findOne({ where: { email } });
+  if (!loggedInUser) {
     throw new UserNotFoundError();
   }
-  if (!await compareHashPassword(password, user.password)) {
+  if (!await compareHashPassword(password, loggedInUser.password)) {
     throw new InvalidPasswordError();
   }
-  return user;
+  return loggedInUser.publicDataValues();
 }
 
 module.exports = { register, login, validateUserTokenData };

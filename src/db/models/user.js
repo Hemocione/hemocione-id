@@ -4,6 +4,7 @@ const {
 } = require('sequelize');
 
 const { validateCPF } = require('../../utils/cpf')
+const { selectObjKeys } = require('../../utils/selectObjKeys'); 
 
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
@@ -14,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+    }
+
+    publicDataValues() {
+      return selectObjKeys(this.dataValues, ['id', 'givenName', 'surName', 'phone', 'bloodType', 'birthDate', 'email', 'gender', 'isAdmin'])
     }
   }
 
