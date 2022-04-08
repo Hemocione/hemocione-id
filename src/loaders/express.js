@@ -21,8 +21,6 @@ const init = ({ expressApp: app }) =>
     app.use(xssEscape);
     //Serie de headers de segurança
     app.use(helmet());
-    //Sanitize for nosql injection
-    app.use(mongoSanitize());
 
     //loads every route file
     try {
