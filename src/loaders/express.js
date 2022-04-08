@@ -1,7 +1,6 @@
 const express = require("express");
 const fs = require("fs");
 const cors = require("cors");
-const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const requestsLogging = require("../middlewares/requestsLogging");
 const { errorsMiddleware, notFoundRoute } = require("../middlewares/errorsMiddleware");
