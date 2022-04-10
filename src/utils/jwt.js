@@ -17,8 +17,7 @@ const signUser = (user, expires = '7d') => {
     givenName: user.givenName,
     bloodType: user.bloodType,
     email: user.email,
-    name: user.name,
-    isAdmin: user.isAdmin
+    name: user.name
   }, expires);
 }
 

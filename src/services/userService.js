@@ -23,11 +23,12 @@ const register = async (userData) => {
   }
 }
 
-const validateUserTokenData = async (userData) => {
-  const validUser = await user.findOne({ where: { id: userData.id, isAdmin: userData.isAdmin, email: userData.email } });
-  if (!validUser) {
+const findUserFromTokenData = async (tokenUserData) => {
+  const foundUser = await user.findOne({ where: { id: tokenUserData.id, email: tokenUserData.email, bloodType: tokenUserData.bloodType, givenName: tokenUserData.givenName }})
+  if (!foundUser) {
     throw new InvalidTokenData();
   }
+  return foundUser.publicDataValues()
 }
 
 const login = async (email, password) => {
@@ -41,4 +42,4 @@ const login = async (email, password) => {
   return loggedInUser.publicDataValues();
 }
 
-module.exports = { register, login, validateUserTokenData };
+module.exports = { register, login, findUserFromTokenData };

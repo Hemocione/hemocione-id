@@ -21,8 +21,8 @@ router.post("/register", wrapAsyncOperationalErrors(async (req, res, next) => {
 
 router.get("/validate-token", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
   const userData = req.authUser;
-  await userService.validateUserTokenData(userData);
-  res.status(200).json({ message: "Token válido.", user: userData });
+  const user = await userService.findUserFromTokenData(userData);
+  res.status(200).json({ message: "Token válido.", user: user });
 }))
 
 module.exports = { url: "/users", router };
