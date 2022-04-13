@@ -1,8 +1,9 @@
 const { user } = require('../db/models');
 const { generateHashPassword, compareHashPassword } = require('../utils/hash');
 const { selectObjKeys } = require('../utils/selectObjKeys'); 
-const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData } = require("../errors/authErrors");
+const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData, ForbiddenError } = require("../errors/authErrors");
 const { ValidationError } = require('sequelize');
+const _ = require('lodash')
 
 const register = async (userData) => {
   // not using image for now
@@ -23,14 +24,6 @@ const register = async (userData) => {
   }
 }
 
-const findUserFromTokenData = async (tokenUserData) => {
-  const foundUser = await user.findOne({ where: { id: tokenUserData.id, email: tokenUserData.email, bloodType: tokenUserData.bloodType, givenName: tokenUserData.givenName }})
-  if (!foundUser) {
-    throw new InvalidTokenData();
-  }
-  return foundUser.publicDataValues()
-}
-
 const login = async (email, password) => {
   const loggedInUser = await user.findOne({ where: { email } });
   if (!loggedInUser) {
@@ -42,4 +35,93 @@ const login = async (email, password) => {
   return loggedInUser.publicDataValues();
 }
 
-module.exports = { register, login, findUserFromTokenData };
+const updateUser = async (userId, userFields, updatableFields) => {
+  const filteredFields = selectObjKeys(userFields, updatableFields)
+
+  if (filteredFields.password)
+    filteredFields.password = await generateHashPassword(filteredFields.password)
+  
+  try {
+    const updatedUsers = await user.update(
+      filteredFields,
+      {
+        where: { id: userId },
+        returning: true,
+        plain: true
+      }
+    );
+    
+    if (updatedUsers[0] === 0) {
+      throw new InvalidUserParamsError()
+    }
+
+    return updatedUsers[1].publicDataValues();
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      throw new InvalidUserParamsError(e.errors.map((error) => error.message).join(', '));
+    }
+    throw e;
+  }
+}
+
+const findUser = async (userParams, validSearchKeys=['id', 'document', 'email']) => {
+  const filteredUserParams = selectObjKeys(userParams, validSearchKeys)
+  if (_.isEmpty(filteredUserParams)) {
+    throw new UserNotFoundError();
+  }
+  
+  const foundUser = await user.findOne({ where: filteredUserParams })
+  if (!foundUser) {
+    throw new UserNotFoundError();
+  }
+  
+  return foundUser.publicDataValues()
+}
+
+const currentUserUpdateUser = async (currentUser, userId, userFields) => {
+  // Admins can name other admins and users are the only ones able to change their own data
+  let updatableFields = []
+  if (currentUser.id === userId)
+    updatableFields = updatableFields.concat('givenName', 'surName', 'document', 'phone', 'bloodType', 'birthDate', 'email', 'password', 'gender')
+  if (currentUser.isAdmin)
+    updatableFields = updatableFields.concat('isAdmin')
+
+  if (updatableFields.length === 0)
+    throw new ForbiddenError()
+
+  const updatedUser = await updateUser(userId, userFields, updatableFields)
+  return updatedUser
+}
+
+
+const findUserFromTokenData = async (tokenUserData) => {
+  const validUserKeys = ['id', 'email']
+  try {
+    const foundUser = await findUser(tokenUserData, validUserKeys)
+    return foundUser
+  } catch(e) {
+    if (e instanceof UserNotFoundError) {
+      throw new InvalidTokenData()
+    }
+  }
+}
+
+const validateUserIsAdmin = async (tokenUserData) => {
+  const foundUser = await findUserFromTokenData(tokenUserData)
+  if (foundUser.isAdmin)
+    return foundUser
+  
+  throw new ForbiddenError()
+}
+
+const validateUserAccess = async (tokenUserData, targetUserId) => {
+  const foundUser = await findUserFromTokenData(tokenUserData)
+  if (!foundUser.isAdmin && foundUser.id !== targetUserId) {
+    console.log('foi aqui q deu ruim')
+    throw new ForbiddenError()
+  }
+
+  return foundUser
+}
+
+module.exports = { register, login, findUserFromTokenData, findUser, validateUserIsAdmin, validateUserAccess, currentUserUpdateUser };

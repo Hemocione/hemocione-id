@@ -1,10 +1,21 @@
 const express = require("express");
 const { signUser } = require("../utils/jwt");
-const { selectObjKeys } = require("../utils/selectObjKeys");
 const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
 const wrapAsyncOperationalErrors = require('../utils/wrapAsyncOperationalErrors')
 const userService = require('../services/userService');
+
+router.get("/find-user", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
+  await userService.validateUserIsAdmin(req.authUser)
+  const foundUser = await userService.findUser(req.query)
+  res.status(200).json(foundUser)
+}));
+
+router.put("/:id", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
+  const currentUser = await userService.validateUserAccess(req.authUser, req.params.id)
+  const updatedUser = await userService.currentUserUpdateUser(currentUser, req.params.id, req.body) 
+  res.status(200).json({ message: "Usuário atualizado com sucesso!", user: updatedUser })
+}));
 
 router.post("/login", wrapAsyncOperationalErrors(async (req, res, next) => {
   const { email, password } = req.body;
@@ -20,7 +31,6 @@ router.post("/register", wrapAsyncOperationalErrors(async (req, res, next) => {
 }));
 
 router.get("/validate-token", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
-  const userData = req.authUser;
   const user = await userService.findUserFromTokenData(userData);
   res.status(200).json({ message: "Token válido.", user: user });
 }))
