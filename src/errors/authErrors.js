@@ -30,4 +30,10 @@ class InvalidTokenData extends AuthError {
   }
 }
 
-module.exports = { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData, AuthError };
+class ForbiddenError extends AuthError {
+  constructor(message="Você não tem permissão para fazer isso.") {
+    super("ForbiddenError", message, 403)
+  }
+}
+
+module.exports = { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData, AuthError, ForbiddenError };
