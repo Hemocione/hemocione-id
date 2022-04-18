@@ -64,18 +64,18 @@ const updateUser = async (userId, userFields, updatableFields) => {
   }
 }
 
-const findUser = async (userParams, validSearchKeys=['id', 'document', 'email']) => {
+const findUsers = async (userParams, validSearchKeys=['id', 'document', 'email', 'isAdmin']) => {
   const filteredUserParams = selectObjKeys(userParams, validSearchKeys)
   if (_.isEmpty(filteredUserParams)) {
     throw new UserNotFoundError();
   }
   
-  const foundUser = await user.findOne({ where: filteredUserParams })
-  if (!foundUser) {
+  const foundUsers = await user.findAll({ where: filteredUserParams })
+  if (foundUsers.length === 0) {
     throw new UserNotFoundError();
   }
   
-  return foundUser.publicDataValues()
+  return foundUsers.map((foundUser) => foundUser.publicDataValues())
 }
 
 const currentUserUpdateUser = async (currentUser, userId, userFields) => {
@@ -97,8 +97,8 @@ const currentUserUpdateUser = async (currentUser, userId, userFields) => {
 const findUserFromTokenData = async (tokenUserData) => {
   const validUserKeys = ['id', 'email']
   try {
-    const foundUser = await findUser(tokenUserData, validUserKeys)
-    return foundUser
+    const foundUsers = await findUsers(tokenUserData, validUserKeys)
+    return foundUsers[0]
   } catch(e) {
     if (e instanceof UserNotFoundError) {
       throw new InvalidTokenData()
@@ -124,4 +124,4 @@ const validateUserAccess = async (tokenUserData, targetUserId) => {
   return foundUser
 }
 
-module.exports = { register, login, findUserFromTokenData, findUser, validateUserIsAdmin, validateUserAccess, currentUserUpdateUser };
+module.exports = { register, login, findUserFromTokenData, findUsers, validateUserIsAdmin, validateUserAccess, currentUserUpdateUser };

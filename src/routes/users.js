@@ -5,10 +5,10 @@ const authenticate = require("../middlewares/authenticate");
 const wrapAsyncOperationalErrors = require('../utils/wrapAsyncOperationalErrors')
 const userService = require('../services/userService');
 
-router.get("/find-user", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
+router.get("/", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
   await userService.validateUserIsAdmin(req.authUser)
-  const foundUser = await userService.findUser(req.query)
-  res.status(200).json(foundUser)
+  const foundUsers = await userService.findUsers(req.query)
+  res.status(200).json(foundUsers)
 }));
 
 router.put("/:id", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
