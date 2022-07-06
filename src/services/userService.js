@@ -3,7 +3,7 @@ const { generateHashPassword, compareHashPassword } = require('../utils/hash')
 const { selectObjKeys } = require('../utils/selectObjKeys')
 const {
   UserNotFoundError,
-  InvalidPasswordError,
+  InvalidCredentialsError,
   InvalidUserParamsError,
   InvalidTokenData,
   ForbiddenError,
@@ -45,10 +45,10 @@ const register = async (userData) => {
 const login = async (email, password) => {
   const loggedInUser = await user.findOne({ where: { email } })
   if (!loggedInUser) {
-    throw new UserNotFoundError()
+    throw new InvalidCredentialsError()
   }
   if (!(await compareHashPassword(password, loggedInUser.password))) {
-    throw new InvalidPasswordError()
+    throw new InvalidCredentialsError()
   }
   return loggedInUser.publicDataValues()
 }

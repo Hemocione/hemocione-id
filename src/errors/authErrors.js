@@ -12,9 +12,9 @@ class UserNotFoundError extends AuthError {
   }
 }
 
-class InvalidPasswordError extends AuthError {
-  constructor(message = 'Senha incorreta.') {
-    super('InvalidPasswordError', message, 401)
+class InvalidCredentialsError extends AuthError {
+  constructor(message = 'Credenciais inválidas.') {
+    super('InvalidCredentialsError', message, 401)
   }
 }
 
@@ -38,7 +38,7 @@ class ForbiddenError extends AuthError {
 
 module.exports = {
   UserNotFoundError,
-  InvalidPasswordError,
+  InvalidCredentialsError,
   InvalidUserParamsError,
   InvalidTokenData,
   AuthError,
