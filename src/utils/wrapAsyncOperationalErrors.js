@@ -1,4 +1,4 @@
-const { CustomAPIError } = require('../errors/customAPIError');
+const { CustomAPIError } = require('../errors/customAPIError')
 
 // Capturar errors esperados pela aplicação!!! :)
 const wrapAsyncOperationalErrors = (fn) => {
@@ -7,11 +7,11 @@ const wrapAsyncOperationalErrors = (fn) => {
       await fn(req, res, next)
     } catch (e) {
       if (e instanceof CustomAPIError) {
-        return res.status(e.statusCode).json({ message: e.message });
+        return res.status(e.statusCode).json({ message: e.message })
       }
-      next(e);
+      next(e)
     }
-  };
-};
+  }
+}
 
-module.exports = wrapAsyncOperationalErrors;
+module.exports = wrapAsyncOperationalErrors
