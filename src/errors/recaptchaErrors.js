@@ -1,3 +1,5 @@
+const { CustomAPIError } = require('./customAPIError')
+
 class RecaptchaError extends CustomAPIError {
   constructor(name, message, statusCode) {
     super(name, message, statusCode, 'RecaptchaError')
