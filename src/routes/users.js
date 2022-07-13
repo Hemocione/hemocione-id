@@ -4,7 +4,7 @@ const router = express.Router()
 const authenticate = require('../middlewares/authenticate')
 const wrapAsyncOperationalErrors = require('../utils/wrapAsyncOperationalErrors')
 const userService = require('../services/userService')
-const validateRecaptchaService = require('../services/validateRecaptchaService')
+const recaptchaService = require('../services/recaptchaService')
 
 router.get(
   '/',
@@ -38,7 +38,7 @@ router.put(
 router.post(
   '/login',
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    await validateRecaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
+    await recaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
     const { email, password } = req.body
     const user = await userService.login(email, password)
     const token = signUser(user)
@@ -49,7 +49,7 @@ router.post(
 router.post(
   '/register',
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    await validateRecaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
+    await recaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
     const user = await userService.register(req.body)
     const token = signUser(user)
     res.status(200).json({ user: user, token: token })
