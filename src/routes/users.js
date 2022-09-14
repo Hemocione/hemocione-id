@@ -20,9 +20,17 @@ router.post("/register", wrapAsyncOperationalErrors(async (req, res, next) => {
 }));
 
 router.get("/validate-token", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
-  const userData = req.authUser;
-  await userService.validateUserTokenData(userData);
-  res.status(200).json({ message: "Token válido.", user: userData });
+  res.status(200).json({ message: "Token válido.", user: req.authUser });
+}))
+
+router.post("/recover-password", wrapAsyncOperationalErrors(async (req, res, next) => {
+  const { email } = req.body
+  await userService.recoverPassword(email)
+  res.status(200);
+}))
+
+router.post("/reset-password", authenticateEmailRecover, wrapAsyncOperationalErrors(async (req, res, next) => {
+
 }))
 
 module.exports = { url: "/users", router };

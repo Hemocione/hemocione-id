@@ -22,4 +22,10 @@ const signUser = (user, expires = '7d') => {
   }, expires);
 }
 
+const signRecover = (email, expires = '1h') => {
+  return sign({
+    id: user.id
+  }, expires)
+}
+
 module.exports = { sign, signUser, verify };
