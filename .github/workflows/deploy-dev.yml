@@ -18,8 +18,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - run: yarn install
+          cache: "npm"
+      - run: npm install
+      - run: npm build
 
       - uses: a7ul/tar-action@v1.1.0
         with:
@@ -28,7 +29,6 @@ jobs:
           files: |
             src/
             package.json
-            yarn.lock
             captain-definition
             .sequelizerc
           outPath: deploy.tar
