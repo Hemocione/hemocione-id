@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm install
-      - run: npm build
+      - run: npm run build
 
       - uses: a7ul/tar-action@v1.1.0
         with:
