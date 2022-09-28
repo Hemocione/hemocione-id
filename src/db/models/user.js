@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 const {
   Model
-} = require('sequelize');
+} = require('sequelize')
 
 const { validateCPF } = require('../../utils/cpf')
-const { selectObjKeys } = require('../../utils/selectObjKeys'); 
+const { selectObjKeys } = require('../../utils/selectObjKeys')
 
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    image: { 
+    image: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -96,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     emailVerified: DataTypes.BOOLEAN,
-    password: { 
+    password: {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
@@ -111,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
     document: {
       type: DataTypes.STRING,
       validate: {
-        isValidCPF (value) {
+        isValidCPF(value) {
           if (!validateCPF(value)) {
             throw new Error('CPF inválido')
           }
@@ -122,7 +122,7 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'CPF já cadastrado'
       },
       notNull: {
-        msg: 'CPF não pode ser vazio'  
+        msg: 'CPF não pode ser vazio'
       },
       allowNull: false
     },
@@ -144,6 +144,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'user',
-  });
-  return user;
-};
+  })
+  return user
+}

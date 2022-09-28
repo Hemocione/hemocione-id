@@ -1,10 +1,10 @@
-const { user } = require('../db/models');
-const { generateHashPassword, compareHashPassword } = require('../utils/hash');
-const { selectObjKeys } = require('../utils/selectObjKeys');
-const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData } = require("../errors/authErrors");
-const { ValidationError } = require('sequelize');
-const { sgMail } = require('@sendgrid/mail');
-const { CustomAPIError } = require('../errors/customAPIError');
+const { user } = require('../db/models')
+const { generateHashPassword, compareHashPassword } = require('../utils/hash')
+const { selectObjKeys } = require('../utils/selectObjKeys')
+const { UserNotFoundError, InvalidPasswordError, InvalidUserParamsError, InvalidTokenData } = require("../errors/authErrors")
+const { ValidationError } = require('sequelize')
+const { sgMail } = require('@sendgrid/mail')
+const { CustomAPIError } = require('../errors/customAPIError')
 
 const register = async (userData) => {
   // not using image for now
@@ -14,32 +14,36 @@ const register = async (userData) => {
     const createdUser = await user.create({
       ...filteredUserParams,
       password: await generateHashPassword(filteredUserParams.password)
-    });
-    return createdUser.publicDataValues();
+    })
+    return createdUser.publicDataValues()
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
     if (e instanceof ValidationError) {
-      throw new InvalidUserParamsError(e.errors.map((error) => error.message).join(', '));
+      throw new InvalidUserParamsError(e.errors.map((error) => error.message).join(', '))
     }
-    throw e;
+    throw e
   }
 }
 
 const login = async (email, password) => {
-  const loggedInUser = await user.findOne({ where: { email } });
+  const loggedInUser = await user.findOne({ where: { email } })
   if (!loggedInUser) {
-    throw new UserNotFoundError();
+    throw new UserNotFoundError()
   }
   if (!await compareHashPassword(password, loggedInUser.password)) {
-    throw new InvalidPasswordError();
+    throw new InvalidPasswordError()
   }
-  return loggedInUser.publicDataValues();
+  return loggedInUser.publicDataValues()
 }
 
 const recoverPassword = async (email) => {
   const recoverUser = await user.findOne({ where: { email } })
 
   if (!recoverUser) return
+
+  token = signRecovery(recoverUser.id)
+
+  link = `https://${process.env.MAIN_SITE}/reset?=${token}`
 
   const mailOptions = {
     to: email,
@@ -55,13 +59,13 @@ const recoverPassword = async (email) => {
   })
 }
 
-const resetPassword = async (email, newPassword) => {
-  const recoverUser = await user.findOne({ where: { email } });
+const resetPassword = async (id, newPassword) => {
+  const recoverUser = await user.findOne({ where: { id } })
 
-  if (!recoverUser) return;
+  if (!recoverUser) return
 
   recoverUser.password = newPassword
-  await model.update(recoverUser, { where: { id: recoverUser.id } });
+  await model.update(recoverUser, { where: { id } })
 }
 
-module.exports = { register, login, recoverPassword, validateUserTokenData };
+module.exports = { register, login, recoverPassword, resetPassword }

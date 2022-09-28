@@ -1,6 +1,6 @@
-require('dotenv').config();
+require('dotenv').config()
 
-module.exports = { 
+module.exports = {
   local: {
     use_env_variable: 'DATABASE_URL',
     dialect: "postgres",
