@@ -7,7 +7,6 @@ const { sgMail } = require('@sendgrid/mail')
 const { CustomAPIError } = require('../errors/customAPIError')
 
 const register = async (userData) => {
-  // not using image for now
   const desiredKeys = ['givenName', 'surName', 'document', 'phone', 'bloodType', 'birthDate', 'email', 'password', 'gender']
   const filteredUserParams = selectObjKeys(userData, desiredKeys)
   try {
