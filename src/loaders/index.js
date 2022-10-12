@@ -1,4 +1,4 @@
-const fs = require("fs")
+const fs = require('fs')
 
 //Loads each initialization file as promise and returns a promise
 const loader = (confObj) =>
@@ -6,7 +6,7 @@ const loader = (confObj) =>
     try {
       const ps = []
       fs.readdirSync(__dirname).forEach((file) => {
-        if (file != "index.js") {
+        if (file != 'index.js') {
           const r = require(`./${file.slice(0, -3)}`)
           ps.push(r(confObj))
         }

@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken")
+const jwt = require('jsonwebtoken')
 
-const sign = (data, expires = "7d") => {
+const sign = (data, expires = '7d') => {
   return jwt.sign(data, process.env.JWT_SECRET_KEY, {
     expiresIn: expires,
   })
@@ -12,14 +12,16 @@ const verify = (token) => {
 }
 
 const signUser = (user, expires = '7d') => {
-  return sign({
-    id: user.id,
-    givenName: user.givenName,
-    bloodType: user.bloodType,
-    email: user.email,
-    name: user.name,
-    isAdmin: user.isAdmin
-  }, expires)
+  return sign(
+    {
+      id: user.id,
+      givenName: user.givenName,
+      bloodType: user.bloodType,
+      email: user.email,
+      name: user.name,
+    },
+    expires
+  )
 }
 
 const signRecovery = (id, expires = '1h') => {

@@ -1,17 +1,20 @@
-const express = require("express")
-const fs = require("fs")
-const cors = require("cors")
-const helmet = require("helmet")
-const requestsLogging = require("../middlewares/requestsLogging")
-const { errorsMiddleware, notFoundRoute } = require("../middlewares/errorsMiddleware")
-const xssEscape = require("../middlewares/xssEscape")
-const contentType = require("../middlewares/contentType")
+const express = require('express')
+const fs = require('fs')
+const cors = require('cors')
+const helmet = require('helmet')
+const requestsLogging = require('../middlewares/requestsLogging')
+const {
+  errorsMiddleware,
+  notFoundRoute,
+} = require('../middlewares/errorsMiddleware')
+const xssEscape = require('../middlewares/xssEscape')
+const contentType = require('../middlewares/contentType')
 
 //Initializes express
 const init = ({ expressApp: app }) =>
   new Promise((resolve, reject) => {
     const corsOptions = {
-      origin: "*",
+      origin: '*',
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
     app.use(requestsLogging)
@@ -24,7 +27,7 @@ const init = ({ expressApp: app }) =>
 
     //loads every route file
     try {
-      fs.readdirSync("./src/routes").forEach((file) => {
+      fs.readdirSync('./src/routes').forEach((file) => {
         const r = require(`../routes/${file.slice(0, -3)}`)
         app.use(r.url, r.router)
       })
