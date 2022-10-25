@@ -152,6 +152,12 @@ module.exports = (sequelize, DataTypes) => {
       isAdmin: DataTypes.BOOLEAN,
     },
     {
+      hooks: {
+        beforeSave: (user, options) => {
+          const userRawDocument = user.document
+          user.document = userRawDocument.replace(/[^0-9]/g, '')
+        }
+      },
       sequelize,
       modelName: 'user',
     }
