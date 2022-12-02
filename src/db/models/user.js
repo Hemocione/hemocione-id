@@ -130,10 +130,7 @@ module.exports = (sequelize, DataTypes) => {
           args: true,
           msg: 'CPF já cadastrado',
         },
-        notNull: {
-          msg: 'CPF não pode ser vazio',
-        },
-        allowNull: false,
+        allowNull: true,
       },
       phone: DataTypes.STRING,
       gender: {
