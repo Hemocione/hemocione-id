@@ -121,7 +121,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           isValidCPF(value) {
-            if (!validateCPF(value)) {
+            if (value && !validateCPF(value)) {
               throw new Error('CPF inválido')
             }
           },
