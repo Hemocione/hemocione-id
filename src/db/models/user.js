@@ -151,9 +151,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeSave: (user, options) => {
-          const userRawDocument = user.document
-          if (userRawDocument)
-            user.document = userRawDocument.replace(/[^0-9]/g, '')
+          const userRawDocument = user.document?.trim()
+          if (userRawDocument) user.document = userRawDocument.replace(/[^0-9]/g, '')
+          if (userRawDocument === '') user.document = null
         }
       },
       sequelize,
