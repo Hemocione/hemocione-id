@@ -6,6 +6,7 @@ const wrapAsyncOperationalErrors = (fn) => {
     try {
       await fn(req, res, next)
     } catch (e) {
+      console.log("wrapAsyncOperationalError: ", e)
       if (e instanceof CustomAPIError) {
         return res.status(e.statusCode).json({ message: e.message })
       }

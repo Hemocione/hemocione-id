@@ -2,10 +2,10 @@ const express = require("express")
 const { signUser } = require("../utils/jwt")
 const router = express.Router()
 const authenticate = require("../middlewares/authenticate")
-const authenticateRecovery = require("../middlewares/authenticateRecovery")
 const validateCaptcha = require("../middlewares/validateCaptcha")
 const wrapAsyncOperationalErrors = require('../utils/wrapAsyncOperationalErrors')
 const userService = require('../services/userService')
+const recaptchaService = require('../services/recaptchaService')
 
 router.get(
   '/',
@@ -61,15 +61,17 @@ router.get("/validate-token", authenticate, wrapAsyncOperationalErrors(async (re
   res.status(200).json({ message: "Token válido.", user: req.authUser })
 }))
 
-router.post("/recover-password", validateCaptcha, wrapAsyncOperationalErrors(async (req, res, next) => {
+router.post("/recover-password", wrapAsyncOperationalErrors(async (req, res, next) => {
+  await recaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
   const { email } = req.body
   await userService.recoverPassword(email)
-  res.status(200)
+  res.sendStatus(200)
 }))
 
-router.post("/reset-password", validateCaptcha, authenticateRecovery, wrapAsyncOperationalErrors(async (req, res, next) => {
-  await userService.resetPassword(req.accountId, req.body.newPassword)
-  res.status(200)
+router.post("/reset-password", authenticate, wrapAsyncOperationalErrors(async (req, res, next) => {
+  await recaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
+  await userService.resetPassword(req.tokenObj.id, req.body.newPassword)
+  res.sendStatus(200)
 }))
 
 module.exports = { url: "/users", router }

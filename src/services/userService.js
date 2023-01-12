@@ -1,7 +1,8 @@
 const { user } = require('../db/models')
 const { generateHashPassword, compareHashPassword } = require('../utils/hash')
 const { selectObjKeys } = require('../utils/selectObjKeys')
-const { sgMail } = require('@sendgrid/mail')
+const { signRecovery } = require("../utils/jwt")
+const sgMail = require('@sendgrid/mail')
 const { CustomAPIError } = require('../errors/customAPIError')
 const {
   UserNotFoundError,
@@ -12,6 +13,7 @@ const {
 } = require('../errors/authErrors')
 const { ValidationError } = require('sequelize')
 const _ = require('lodash')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const register = async (userData) => {
   // not using image for now
@@ -147,7 +149,6 @@ const validateUserIsAdmin = async (tokenUserData) => {
 const validateUserAccess = async (tokenUserData, targetUserId) => {
   const foundUser = await findUserFromTokenData(tokenUserData)
   if (!foundUser.isAdmin && foundUser.id !== targetUserId) {
-    console.log('foi aqui q deu ruim')
     throw new ForbiddenError()
   }
 
@@ -158,22 +159,22 @@ const recoverPassword = async (email) => {
   const recoverUser = await user.findOne({ where: { email } })
 
   if (!recoverUser) return
-
-  token = signRecovery(recoverUser.id)
-
-  link = `https://${process.env.MAIN_SITE}/reset?=${token}`
-
+  const token = signRecovery(recoverUser.id)
+  const link = `${process.env.MAIN_SITE}/reset/?token=${token}`
+  _.template()
   const mailOptions = {
     to: email,
     from: process.env.FROM_EMAIL,
-    subject: "Recuperação de Senha Hemocione",
-    text: `Olá ${recoverUser.givenName} \n 
-    Please click on the following link ${link} to reset your password. \n\n 
-    If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-  }
-
-  sgMail.send(mailOptions, (error, result) => {
-    if (error) throw new CustomAPIError("EmailServiceError", "Couldn't send email", 500)
+    templateId: process.env.SGMAIL_TEMPLATE_ID,
+    dynamicTemplateData: {
+      userName: recoverUser.givenName,
+      recoveryLink: link,
+    },
+  };
+  await sgMail.send(mailOptions, (error, result) => {
+    if (error) {
+      throw new CustomAPIError("EmailServiceError", "Couldn't send email", 500)
+    }
   })
 }
 
@@ -182,8 +183,8 @@ const resetPassword = async (id, newPassword) => {
 
   if (!recoverUser) return
 
-  recoverUser.password = newPassword
-  await model.update(recoverUser, { where: { id } })
+  recoverUser.password = await generateHashPassword(newPassword)
+  await recoverUser.save()
 }
 
 module.exports = {
@@ -194,6 +195,6 @@ module.exports = {
   validateUserIsAdmin,
   validateUserAccess,
   currentUserUpdateUser,
-  recoverPassword, 
+  recoverPassword,
   resetPassword
 }
