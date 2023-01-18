@@ -121,7 +121,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           isValidCPF(value) {
-            if (!validateCPF(value)) {
+            if (value && !validateCPF(value)) {
               throw new Error('CPF inválido')
             }
           },
@@ -130,10 +130,7 @@ module.exports = (sequelize, DataTypes) => {
           args: true,
           msg: 'CPF já cadastrado',
         },
-        notNull: {
-          msg: 'CPF não pode ser vazio',
-        },
-        allowNull: false,
+        allowNull: true,
       },
       phone: DataTypes.STRING,
       gender: {
@@ -152,6 +149,13 @@ module.exports = (sequelize, DataTypes) => {
       isAdmin: DataTypes.BOOLEAN,
     },
     {
+      hooks: {
+        beforeSave: (user, options) => {
+          const userRawDocument = user.document?.trim()
+          if (userRawDocument) user.document = userRawDocument.replace(/[^0-9]/g, '')
+          if (userRawDocument === '') user.document = null
+        }
+      },
       sequelize,
       modelName: 'user',
     }
