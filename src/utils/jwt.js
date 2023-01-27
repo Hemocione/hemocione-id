@@ -24,4 +24,8 @@ const signUser = (user, expires = '7d') => {
   )
 }
 
-module.exports = { sign, signUser, verify }
+const signRecovery = (id, expires = '1h') => {
+  return sign({ id }, expires)
+}
+
+module.exports = { sign, signUser, verify, signRecovery }

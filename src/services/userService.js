@@ -1,6 +1,8 @@
 const { user } = require('../db/models')
 const { generateHashPassword, compareHashPassword } = require('../utils/hash')
 const { selectObjKeys } = require('../utils/selectObjKeys')
+const { signRecovery } = require("../utils/jwt")
+const { sendRecoveryEmail } = require("../services/emailService")
 const {
   UserNotFoundError,
   InvalidCredentialsError,
@@ -9,7 +11,6 @@ const {
   ForbiddenError,
 } = require('../errors/authErrors')
 const { ValidationError } = require('sequelize')
-const _ = require('lodash')
 
 const register = async (userData) => {
   // not using image for now
@@ -145,11 +146,27 @@ const validateUserIsAdmin = async (tokenUserData) => {
 const validateUserAccess = async (tokenUserData, targetUserId) => {
   const foundUser = await findUserFromTokenData(tokenUserData)
   if (!foundUser.isAdmin && foundUser.id !== targetUserId) {
-    console.log('foi aqui q deu ruim')
     throw new ForbiddenError()
   }
 
   return foundUser
+}
+
+const recoverPassword = async (email) => {
+  const recoverUser = await user.findOne({ where: { email } })
+
+  if (!recoverUser) return
+  const token = signRecovery(recoverUser.id)
+  const link = `${process.env.MAIN_SITE}/reset/?token=${token}`
+  await sendRecoveryEmail(email, recoverUser.givenName, link)
+}
+
+const resetPassword = async (id, newPassword) => {
+  const recoverUser = await user.findOne({ where: { id } })
+  if (!recoverUser) return
+
+  recoverUser.password = await generateHashPassword(newPassword)
+  await recoverUser.save()
 }
 
 module.exports = {
@@ -160,4 +177,6 @@ module.exports = {
   validateUserIsAdmin,
   validateUserAccess,
   currentUserUpdateUser,
+  recoverPassword,
+  resetPassword
 }

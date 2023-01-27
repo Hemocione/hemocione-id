@@ -1,4 +1,6 @@
 const { InvalidRecaptchaError } = require('../errors/recaptchaErrors')
+const dotenv = require('dotenv')
+dotenv.config()
 
 const validateRecaptcha = async (recaptchaToken) => {
   try {
@@ -11,7 +13,7 @@ const validateRecaptcha = async (recaptchaToken) => {
     if (!googleResJson['success']) {
       throw new InvalidRecaptchaError()
     }
-  } catch(error) {
+  } catch (error) {
     throw new InvalidRecaptchaError()
   }
 }

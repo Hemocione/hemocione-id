@@ -1,1 +1,2 @@
 # Hemocione ID
+npm start

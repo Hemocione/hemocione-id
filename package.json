@@ -11,6 +11,7 @@
   "author": "Hemocione INC.",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "@sequelize/core": "^7.0.0-alpha.10",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",

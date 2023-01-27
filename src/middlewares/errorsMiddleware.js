@@ -7,7 +7,7 @@ function errorsMiddleware (err, req, res, _) {
 };
 
 function notFoundRoute(req, res, _) {
-  res.status(404).json({ error: "Route NOT FOUND" });
-};
+  res.status(404).json({ error: "Route NOT FOUND" })
+}
 
-module.exports = { errorsMiddleware, notFoundRoute }; 
+module.exports = { errorsMiddleware, notFoundRoute } 

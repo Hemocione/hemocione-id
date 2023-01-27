@@ -8,7 +8,7 @@ const PORT = process.env.PORT || process.env.SERVER_PORT || 8080
 // load express
 const end = loader({
   expressApp: app,
-  isTest: process.env.ENV === 'test' ? true : false,
+  isTest: process.env.ENV === "test"
 })
   .then(() => {
     return app.listen(PORT, () => console.log(`Server Running on Port ${PORT}`))
