@@ -2,7 +2,7 @@ name: Build & Deploy
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: ["develop"]
 
 jobs:
   build-and-deploy:
@@ -31,10 +31,10 @@ jobs:
             captain-definition
             .sequelizerc
           outPath: deploy.tar
-  
+
       - name: Deploy App to CapRover
         uses: caprover/deploy-from-github@v1.0.1
         with:
-          server: '${{ secrets.CAPROVER_SERVER }}'
-          app: '${{ secrets.CAPROVER_APP_NAME_DEV }}'
-          token: '${{ secrets.CAPROVER_APP_TOKEN_DEV }}'
+          server: "${{ secrets.CAPROVER_SERVER }}"
+          app: "${{ secrets.CAPROVER_APP_NAME_DEV }}"
+          token: "${{ secrets.CAPROVER_APP_TOKEN_DEV }}"

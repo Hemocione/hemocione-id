@@ -7,10 +7,10 @@ function contentType(req, res, next) {
     ) ||
     req.is("application/json") === "application/json"
   ) {
-    next()
+    next();
   } else {
-    res.status(400).json({ message: "Content-Type Inválido" })
+    res.status(400).json({ message: "Content-Type Inválido" });
   }
 }
 
-module.exports = contentType
+module.exports = contentType;
