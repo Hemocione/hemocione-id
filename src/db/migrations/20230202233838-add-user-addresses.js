@@ -45,10 +45,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      location: {
-        type: Sequelize.GEOMETRY,
-        allowNull: false,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
