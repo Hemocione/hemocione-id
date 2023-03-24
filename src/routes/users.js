@@ -5,7 +5,6 @@ const authenticate = require("../middlewares/authenticate");
 const validateRecaptchaMiddleware = require("../middlewares/validateRecaptchaMiddleware");
 const wrapAsyncOperationalErrors = require("../utils/wrapAsyncOperationalErrors");
 const userService = require("../services/userService");
-const recaptchaService = require("../services/recaptchaService");
 
 router.get(
   "/",
