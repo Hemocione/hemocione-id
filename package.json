@@ -6,13 +6,14 @@
   "scripts": {
     "build": "npx sequelize-cli db:migrate",
     "start": "npx sequelize-cli db:migrate && node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Hemocione INC.",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
-    "@sequelize/core": "^7.0.0-alpha.10",
+    "@sequelize/core": "^7.0.0-alpha.25",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -24,8 +25,11 @@
     "node-fetch": "^2.6.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.17.0",
+    "sequelize": "^6.29.3",
     "sequelize-cli": "^6.4.1",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
   }
 }
