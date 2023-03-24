@@ -3,18 +3,18 @@ function logging(req, res, next) {
   const { remoteAddress, remoteFamily } = socket;
 
   console.log(
-      JSON.stringify({
-          timestamp: Date.now(),
-          rawHeaders,
-          httpVersion,
-          method,
-          remoteAddress,
-          remoteFamily,
-          url
-      })
-  )
+    JSON.stringify({
+      timestamp: Date.now(),
+      rawHeaders,
+      httpVersion,
+      method,
+      remoteAddress,
+      remoteFamily,
+      url,
+    })
+  );
 
   next();
 }
 
-module.exports = logging; 
+module.exports = logging;

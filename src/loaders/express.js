@@ -3,7 +3,10 @@ const fs = require("fs");
 const cors = require("cors");
 const helmet = require("helmet");
 const requestsLogging = require("../middlewares/requestsLogging");
-const { errorsMiddleware, notFoundRoute } = require("../middlewares/errorsMiddleware");
+const {
+  errorsMiddleware,
+  notFoundRoute,
+} = require("../middlewares/errorsMiddleware");
 const xssEscape = require("../middlewares/xssEscape");
 const contentType = require("../middlewares/contentType");
 

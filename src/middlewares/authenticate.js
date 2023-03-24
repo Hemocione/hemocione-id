@@ -9,7 +9,7 @@ function authenticate(req, res, next) {
       const entity = verify(token);
       delete entity.iat;
       delete entity.exp;
-      req.authUser = entity;
+      req.tokenObj = entity;
       next();
     } catch (e) {
       if (e instanceof jwt.TokenExpiredError) {
