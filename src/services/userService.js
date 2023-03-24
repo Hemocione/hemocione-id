@@ -2,6 +2,7 @@ const { user } = require("../db/models");
 const { generateHashPassword, compareHashPassword } = require("../utils/hash");
 const { selectObjKeys } = require("../utils/selectObjKeys");
 const { signRecovery } = require("../utils/jwt");
+const { isObjectEmpty } = require("../utils/isObjectEmpty");
 const { sendRecoveryEmail } = require("../services/emailService");
 const {
   UserNotFoundError,
@@ -11,8 +12,9 @@ const {
   ForbiddenError,
 } = require("../errors/authErrors");
 const { ValidationError } = require("sequelize");
+const _ = require("lodash");
 
-const getUserRegistrationData = async (userData) => {
+const getUserRegistrationData = (userData) => {
   // not using image for now
   const desiredKeys = [
     "givenName",
@@ -26,34 +28,40 @@ const getUserRegistrationData = async (userData) => {
     "gender",
     "address",
   ];
-  const filteredUserParams = selectObjKeys(userData, desiredKeys);
-  const queryOptions = filteredUserParams.address
-    ? {
-        include: [
-          {
-            association: user.addresses,
-          },
-        ],
-      }
-    : {};
+  const userRegistrationData = selectObjKeys(userData, desiredKeys);
 
-  filteredUserParams.addresses = [filteredUserParams.address];
-  delete filteredUserParams.address;
-  return { userRegistrationData: filteredUserParams, queryOptions };
+  if (
+    userRegistrationData.address &&
+    _.isObject(userRegistrationData.address) &&
+    !isObjectEmpty(userRegistrationData.address)
+  ) {
+    userRegistrationData.addresses = [userRegistrationData.address];
+    delete userRegistrationData.address;
+  }
+
+  const queryOptions = {};
+  if (userRegistrationData.addresses) {
+    queryOptions.include = [{ association: user.associations.addresses }];
+  }
+
+  return { userRegistrationData, queryOptions };
 };
 
 const register = async (userData) => {
   const { userRegistrationData, queryOptions } =
     getUserRegistrationData(userData);
 
+  console.log(queryOptions);
+
   try {
     const createdUser = await user.create(
       {
         ...userRegistrationData,
-        password: await generateHashPassword(filteredUserParams.password),
+        password: await generateHashPassword(userRegistrationData.password),
       },
       queryOptions
     );
+
     return createdUser.publicDataValues();
   } catch (e) {
     // if user is trying to register with an already registered email or CPF or invalid data
