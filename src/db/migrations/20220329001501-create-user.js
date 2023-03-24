@@ -1,10 +1,10 @@
-'use strict'
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable("users", {
       id: {
         allowNull: false,
-        defaultValue: Sequelize.literal('uuid_generate_v4()'),
+        defaultValue: Sequelize.literal("uuid_generate_v4()"),
         primaryKey: true,
         type: Sequelize.UUID,
       },
@@ -20,7 +20,7 @@ module.exports = {
       },
       bloodType: {
         allowNull: false,
-        type: Sequelize.ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'),
+        type: Sequelize.ENUM("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"),
       },
       birthDate: {
         allowNull: false,
@@ -48,7 +48,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       gender: {
-        type: Sequelize.ENUM('M', 'F', 'O'),
+        type: Sequelize.ENUM("M", "F", "O"),
       },
       createdAt: {
         allowNull: false,
@@ -62,9 +62,9 @@ module.exports = {
         defaultValue: false,
         type: Sequelize.BOOLEAN,
       },
-    })
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable("users");
   },
-}
+};

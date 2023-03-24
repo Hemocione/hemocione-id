@@ -1,6 +1,6 @@
 function logging(req, res, next) {
-  const { rawHeaders, httpVersion, method, socket, url } = req
-  const { remoteAddress, remoteFamily } = socket
+  const { rawHeaders, httpVersion, method, socket, url } = req;
+  const { remoteAddress, remoteFamily } = socket;
 
   console.log(
     JSON.stringify({
@@ -10,11 +10,11 @@ function logging(req, res, next) {
       method,
       remoteAddress,
       remoteFamily,
-      url
+      url,
     })
-  )
+  );
 
-  next()
+  next();
 }
 
-module.exports = logging 
+module.exports = logging;

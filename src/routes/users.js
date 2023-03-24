@@ -2,6 +2,7 @@ const express = require("express");
 const { signUser } = require("../utils/jwt");
 const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
+const validateRecaptchaMiddleware = require("../middlewares/validateRecaptchaMiddleware");
 const wrapAsyncOperationalErrors = require("../utils/wrapAsyncOperationalErrors");
 const userService = require("../services/userService");
 const recaptchaService = require("../services/recaptchaService");
@@ -37,8 +38,8 @@ router.put(
 
 router.post(
   "/login",
+  validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    await recaptchaService.validateRecaptcha(req.body["g-recaptcha-response"]);
     const { email, password } = req.body;
     const user = await userService.login(email, password);
     const token = signUser(user);
@@ -48,8 +49,8 @@ router.post(
 
 router.post(
   "/register",
+  validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    // await recaptchaService.validateRecaptcha(req.body['g-recaptcha-response'])
     const user = await userService.register(req.body);
     const token = signUser(user);
     res.status(200).json({ user: user, token: token });
@@ -66,8 +67,8 @@ router.get(
 
 router.post(
   "/recover-password",
+  validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    await recaptchaService.validateRecaptcha(req.body["g-recaptcha-response"]);
     const { email } = req.body;
     await userService.recoverPassword(email);
     res.sendStatus(200);
@@ -77,8 +78,8 @@ router.post(
 router.post(
   "/reset-password",
   authenticate,
+  validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    await recaptchaService.validateRecaptcha(req.body["g-recaptcha-response"]);
     await userService.resetPassword(req.tokenObj.id, req.body.newPassword);
     res.sendStatus(200);
   })

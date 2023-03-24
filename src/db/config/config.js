@@ -1,14 +1,14 @@
-require('dotenv').config()
+require("dotenv").config();
 
 module.exports = {
   local: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
-    timezone: 'America/Sao_Paulo',
+    use_env_variable: "DATABASE_URL",
+    dialect: "postgres",
+    timezone: "America/Sao_Paulo",
   },
   development: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
+    use_env_variable: "DATABASE_URL",
+    dialect: "postgres",
     dialectOptions: {
       useUTC: false,
       ssl: {
@@ -16,11 +16,11 @@ module.exports = {
         rejectUnauthorized: false,
       },
     },
-    timezone: 'America/Sao_Paulo',
+    timezone: "America/Sao_Paulo",
   },
   production: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
+    use_env_variable: "DATABASE_URL",
+    dialect: "postgres",
     dialectOptions: {
       useUTC: false,
       ssl: {
@@ -28,6 +28,6 @@ module.exports = {
         rejectUnauthorized: false,
       },
     },
-    timezone: 'America/Sao_Paulo',
+    timezone: "America/Sao_Paulo",
   },
-}
+};

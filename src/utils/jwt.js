@@ -1,17 +1,17 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
-const sign = (data, expires = '7d') => {
+const sign = (data, expires = "7d") => {
   return jwt.sign(data, process.env.JWT_SECRET_KEY, {
     expiresIn: expires,
-  })
-}
+  });
+};
 
 const verify = (token) => {
-  const data = jwt.verify(token, process.env.JWT_SECRET_KEY)
-  return data
-}
+  const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  return data;
+};
 
-const signUser = (user, expires = '7d') => {
+const signUser = (user, expires = "7d") => {
   return sign(
     {
       id: user.id,
@@ -21,11 +21,11 @@ const signUser = (user, expires = '7d') => {
       name: user.name,
     },
     expires
-  )
-}
+  );
+};
 
-const signRecovery = (id, expires = '1h') => {
-  return sign({ id }, expires)
-}
+const signRecovery = (id, expires = "1h") => {
+  return sign({ id }, expires);
+};
 
-module.exports = { sign, signUser, verify, signRecovery }
+module.exports = { sign, signUser, verify, signRecovery };
