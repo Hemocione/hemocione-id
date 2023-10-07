@@ -5,6 +5,7 @@ const authenticate = require("../middlewares/authenticate");
 const validateRecaptchaMiddleware = require("../middlewares/validateRecaptchaMiddleware");
 const wrapAsyncOperationalErrors = require("../utils/wrapAsyncOperationalErrors");
 const userService = require("../services/userService");
+const digitalStandService = require("../services/digitalStandService");
 
 router.get(
   "/",
@@ -48,9 +49,13 @@ router.post(
 
 router.post(
   "/register",
-  validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
     const user = await userService.register(req.body);
+    const { leadId, uuid } = req.query;
+    if (leadId && uuid) {
+      await digitalStandService.updateStatus(leadId, uuid, "success");
+    }
+
     const token = signUser(user);
     res.status(200).json({ user: user, token: token });
   })
