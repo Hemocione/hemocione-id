@@ -2,7 +2,7 @@ const express = require("express");
 const { signUser } = require("../utils/jwt");
 const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
-const validateRecaptchaMiddleware = require("../middlewares/validateRecaptchaMiddleware");
+// const validateRecaptchaMiddleware = require("../middlewares/validateRecaptchaMiddleware");
 const wrapAsyncOperationalErrors = require("../utils/wrapAsyncOperationalErrors");
 const userService = require("../services/userService");
 const digitalStandService = require("../services/digitalStandService");
@@ -38,7 +38,7 @@ router.put(
 
 router.post(
   "/login",
-  validateRecaptchaMiddleware,
+  // validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
     const { email, password } = req.body;
     const user = await userService.login(email, password);
@@ -71,7 +71,7 @@ router.get(
 
 router.post(
   "/recover-password",
-  validateRecaptchaMiddleware,
+  // validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
     const { email } = req.body;
     await userService.recoverPassword(email);
@@ -82,7 +82,7 @@ router.post(
 router.post(
   "/reset-password",
   authenticate,
-  validateRecaptchaMiddleware,
+  // validateRecaptchaMiddleware,
   wrapAsyncOperationalErrors(async (req, res, next) => {
     await userService.resetPassword(req.tokenObj.id, req.body.newPassword);
     res.sendStatus(200);
