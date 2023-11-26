@@ -16,9 +16,10 @@ const signUser = (user, expires = "7d") => {
     {
       id: user.id,
       givenName: user.givenName,
+      surName: user.surName,
       bloodType: user.bloodType,
       email: user.email,
-      name: user.name,
+      phone: user.phone,
     },
     expires
   );
