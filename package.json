@@ -25,7 +25,6 @@
     "node-fetch": "^2.6.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "resend": "^2.0.0",
     "sequelize": "^6.29.3",
     "sequelize-cli": "^6.4.1",
     "validator": "^13.7.0"
