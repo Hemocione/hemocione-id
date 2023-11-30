@@ -23,7 +23,7 @@ const getRecoveryEmailHtml = (userName, recoveryLink) => {
                   padding: 30px;
                   text-align: center;">
       <tr><td>
-        <img src="https://cdn.hemocione.com.br/logos/HemoLogo.svg"
+        <img src="https://cdn.hemocione.com.br/logos/HemoLogo.png"
              style="width: 15%;
                     height: auto"/>
       </td></tr>
@@ -59,6 +59,7 @@ const sendRecoveryEmail = async (email, givenName, link) => {
     from: `Hemocione <${process.env.FROM_EMAIL || "noreply@hemocione.com.br"}>`,
     subject: "Hemocione: Recuperação de senha",
     html,
+    text: `Olá, ${givenName}! Acesse o link ${link} para recuperar sua senha. Se você não requisitou a alteração da sua senha, por favor ignore este email.`,
   };
   try {
     await fetch("https://api.resend.com/emails", {
