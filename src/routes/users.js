@@ -69,6 +69,16 @@ router.get(
   })
 );
 
+router.get(
+  "/regenerate-token",
+  authenticate,
+  wrapAsyncOperationalErrors(async (req, res, next) => {
+    const user = await userService.findUserFromTokenData(req.tokenObj);
+    const token = signUser(user);
+    res.status(200).json({ user: user, token: token });
+  })
+);
+
 router.post(
   "/recover-password",
   // validateRecaptchaMiddleware,
