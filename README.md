@@ -14,7 +14,7 @@ ao mesmo tempo, de tempos em tempos batemos na mesma rota passando um outro filt
 
 - minDonationDate
 
-dependendo do filtro, o endpoint do provedor deve retornar a lista de doações, ordenadas por minDonationDate, para o hemocioneId.
+dependendo do filtro, o endpoint do provedor deve retornar a lista de doações, ordenadas por donationDate, para o hemocioneId.
 este endpoint unico serve tanto para a importação de tempos em tempos das doações como para a importação de um usuários específico
 
 logo, o endpoint deve:
