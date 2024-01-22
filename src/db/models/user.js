@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     publicDataValues() {
-      return selectObjKeys(this.dataValues, this.publicFields());
+      return selectObjKeys(this.dataValues, this.publicFields);
     }
   }
 
