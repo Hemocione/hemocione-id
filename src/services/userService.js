@@ -202,7 +202,7 @@ const resetPassword = async (id, newPassword) => {
 
 const getUserFullData = async (id) => {
   const foundUser = await user.findByPk(id, {
-    select: user.publicFields,
+    attributes: user.publicFields,
     include: [
       { association: user.associations.addresses },
       { association: user.associations.donations },
