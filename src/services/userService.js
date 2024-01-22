@@ -200,6 +200,21 @@ const resetPassword = async (id, newPassword) => {
   await recoverUser.save();
 };
 
+const getUserFullData = async (id) => {
+  const foundUser = await user.findByPk(id, {
+    attributes: user.publicFields,
+    include: [{ association: user.associations.donations, nested: true }],
+  });
+
+  const donations = foundUser.donations;
+  if (!foundUser) throw new UserNotFoundError();
+
+  return {
+    ...foundUser.publicDataValues(),
+    donations,
+  };
+};
+
 module.exports = {
   register,
   login,
@@ -210,4 +225,5 @@ module.exports = {
   currentUserUpdateUser,
   recoverPassword,
   resetPassword,
+  getUserFullData,
 };

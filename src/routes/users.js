@@ -17,6 +17,15 @@ router.get(
   })
 );
 
+router.get(
+  "/me",
+  authenticate,
+  wrapAsyncOperationalErrors(async (req, res, next) => {
+    const data = await userService.getUserFullData(req.tokenObj.id);
+    res.status(200).json(data);
+  })
+);
+
 router.put(
   "/:id",
   authenticate,
