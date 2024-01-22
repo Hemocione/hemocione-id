@@ -11,23 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    publicFields = [
+      "id",
+      "givenName",
+      "surName",
+      "phone",
+      "bloodType",
+      "birthDate",
+      "email",
+      "gender",
+      "isAdmin",
+    ];
+
     static associate(models) {
       this.hasMany(models.userAddress, { as: "addresses" });
       this.hasMany(models.userDonation, { as: "donations" });
-    }
-
-    static publicFields() {
-      return [
-        "id",
-        "givenName",
-        "surName",
-        "phone",
-        "bloodType",
-        "birthDate",
-        "email",
-        "gender",
-        "isAdmin",
-      ];
     }
 
     publicDataValues() {
