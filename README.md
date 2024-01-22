@@ -20,9 +20,14 @@ este endpoint unico serve tanto para a importação de tempos em tempos das doa�
 logo, o endpoint deve:
 
 suportar paginação usual (*page* & *limit* como parametros)
-suportar os filtros: *hemocioneId*, *email*, *telefone* e *minDonationDate*
-
+suportar os filtros: *hemocioneId*, *email*, *telefone*, *minDonationDate* e *maxDonationDate*
 Note que os 3 primeiros devem funcionar como um "possivel match" - se uma doação pertencer a alguem com um hemocioneId igual mas com um email diferente do passado, essa doação deve ser retornada pelo endpoint. o mesmo vale para o caso contrário. o parâmetro "forte" é o minDonationDate
+
+ou seja, existem dois fluxos possiveis:
+
+- passagem dos filtros *hemocioneId*, *email*, *telefone*, *page* e *limit*
+- passagem dos filtros *minDonationDate*, *maxDonationDate*, *page* e *limit*
+
 
 Resposta esperada do endpoint de doação:
 
@@ -31,7 +36,7 @@ Resposta esperada do endpoint de doação:
 ```json
 [
   {
-    "id": "id-doação",
+    "id": "id-doacao",
     "hemocioneId": null ou "id-usuario",
     "email": null ou "email@pessoa",
     "telefone": null ou "telefone", // apenas numeros incluindo DDD e codigo de pais - exemplo BR: 5521984426717 seria um retorno valido.

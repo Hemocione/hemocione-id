@@ -13,10 +13,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.userAddress, { as: "addresses" });
+      this.hasMany(models.userDonation, { as: "donations" });
     }
 
-    publicDataValues() {
-      return selectObjKeys(this.dataValues, [
+    static publicFields() {
+      return [
         "id",
         "givenName",
         "surName",
@@ -26,7 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         "email",
         "gender",
         "isAdmin",
-      ]);
+      ];
+    }
+
+    publicDataValues() {
+      return selectObjKeys(this.dataValues, this.publicFields());
     }
   }
 
