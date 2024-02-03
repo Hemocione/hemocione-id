@@ -204,6 +204,7 @@ const getUserFullData = async (id) => {
   const foundUser = await user.findByPk(id, {
     attributes: user.publicFields,
     include: [{ association: user.associations.donations, nested: true }],
+    order: [[user.associations.donations, "donationDate", "DESC"]],
   });
 
   const donations = foundUser.donations;
