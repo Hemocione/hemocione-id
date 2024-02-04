@@ -11,7 +11,7 @@ router.get(
   "/",
   authenticate,
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    await userService.validateUserIsAdmin(req.authUser);
+    await userService.validateUserIsAdmin(req.tokenObj);
     const foundUsers = await userService.findUsers(req.query);
     res.status(200).json(foundUsers);
   })
@@ -31,7 +31,7 @@ router.put(
   authenticate,
   wrapAsyncOperationalErrors(async (req, res, next) => {
     const currentUser = await userService.validateUserAccess(
-      req.authUser,
+      req.tokenObj,
       req.params.id
     );
     const updatedUser = await userService.currentUserUpdateUser(
@@ -74,7 +74,7 @@ router.get(
   "/validate-token",
   authenticate,
   wrapAsyncOperationalErrors(async (req, res, next) => {
-    res.status(200).json({ message: "Token válido.", user: req.authUser });
+    res.status(200).json({ message: "Token válido.", user: req.tokenObj });
   })
 );
 
