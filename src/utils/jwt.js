@@ -20,6 +20,7 @@ const signUser = (user, expires = "7d") => {
       bloodType: user.bloodType,
       email: user.email,
       phone: user.phone,
+      gender: user.gender,
     },
     expires
   );
