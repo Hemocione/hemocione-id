@@ -5,7 +5,7 @@ const donationService = require("../services/donationService");
 
 router.post("/", authenticate, async (req, res) => {
   // TODO: move logic to check if user can donate or not to backend
-  const user = req.authUser;
+  const user = req.tokenObj;
   const donation = req.body;
   const { donationDate, bloodbankName, label } = donation;
   const donationLabel = label || `Doação para ${bloodbankName}`;
