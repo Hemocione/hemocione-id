@@ -4,35 +4,23 @@ npm start
 
 ## Importação de doações
 
-batemos no endpoint de busca de cada provedor em busca das doações dos usuários - no primeiro login batemos na rota passando alguns filtros extras:
+Para garantir a segurança da importação de dados, um `secret` é gerado para cada provedor. Este secret é enviado em toda requisição no header `x-secret-hemocione` e é compartilhado com o provedor para a validação deste segredo em cada requisição. 
+
+### Usuário específico
+
+batemos no endpoint de busca de cada provedor em busca das doações do usuário logando - no primeiro login batemos na rota passando alguns campos:
 
 - hemocioneId
 - email
 - telefone
 
-ao mesmo tempo, de tempos em tempos batemos na mesma rota passando um outro filtro:
-
-- minDonationDate
-
-dependendo do filtro, o endpoint do provedor deve retornar a lista de doações, ordenadas por donationDate, para o hemocioneId.
-este endpoint unico serve tanto para a importação de tempos em tempos das doações como para a importação de um usuários específico
-
-logo, o endpoint deve:
-
-suportar paginação usual (*page* & *limit* como parametros)
-suportar os filtros: *hemocioneId*, *email*, *telefone*, *minDonationDate* e *maxDonationDate*
-Note que os 3 primeiros devem funcionar como um "possivel match" - se uma doação pertencer a alguem com um hemocioneId igual mas com um email diferente do passado, essa doação deve ser retornada pelo endpoint. o mesmo vale para o caso contrário. o parâmetro "forte" é o minDonationDate
-
-ou seja, existem dois fluxos possiveis:
-
-- passagem dos filtros *hemocioneId*, *email*, *telefone*, *page* e *limit*
-- passagem dos filtros *minDonationDate*, *maxDonationDate*, *page* e *limit*
-
+o endpoint deve retornar as doações do usuários passado como filtro, dando match em ao menos um campo dos mencionados.
 
 Resposta esperada do endpoint de doação:
 
-`GET {seu_endpoint}/?page=0&limit=1` 
+`GET {seu_endpoint} com os parametros acima`
 
+RESPONSE:
 ```json
 [
   {
@@ -45,6 +33,4 @@ Resposta esperada do endpoint de doação:
 ]
 ```
 
-OBS: a primeira página é a 0, não a 1. certifique-se de levar isso em consideração na sua implementação;
-
-Para garantir a segurança da importação de dados, um `secret` é gerado para cada provedor. Este secret é enviado em toda requisição no header `x-secret-hemocione` e é compartilhado com o provedor para a validação deste segredo em cada requisição. 
+### Bulk Import (TODO) - talvez aqui algo mais orientado a interface - Botão de "importar". Usuário "Liga" importações automáticas para uma dada fonte, por exemplo.
