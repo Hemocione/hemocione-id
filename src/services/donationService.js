@@ -27,16 +27,16 @@ const checkIfDonationDateRespectsInterval = (
 
   if (leftDonation) {
     const daysInterval =
-      (donationsOrdered[donationIndex].donationDate -
-        leftDonation.donationDate) /
+      (donationsOrdered[donationIndex].donationDate.getTime() -
+        leftDonation.donationDate.getTime()) /
       (1000 * 60 * 60 * 24);
     if (daysInterval < limitDaysInterval) return false;
   }
 
   if (rightDonation) {
     const daysInterval =
-      (rightDonation.donationDate -
-        donationsOrdered[donationIndex].donationDate) /
+      (rightDonation.donationDate.getTime() -
+        donationsOrdered[donationIndex].donationDate.getTime()) /
       (1000 * 60 * 60 * 24);
     if (daysInterval < limitDaysInterval) return false;
   }
@@ -92,13 +92,16 @@ const checkIfUserCanDonateAtCertainDate = async (
     select: ["id", "donationDate"],
     where: {
       userId,
-      donationDate,
     },
-    order: [["donationDate", "ASC"]],
   });
   const userDonationsCount = userDonations.length;
   if (userDonationsCount < donationHabilityConfig.limitPerYear) return true;
-  const allDonations = userDonations.concat({ donationDate, id: null });
+  const allDonations = userDonations
+    .map((d) => ({
+      id: d.dataValues.id,
+      donationDate: new Date(d.dataValues.donationDate),
+    }))
+    .concat({ donationDate, id: null });
   const orderedDonations = allDonations.sort(
     (a, b) => a.donationDate - b.donationDate
   );
@@ -115,7 +118,6 @@ const checkIfUserCanDonateAtCertainDate = async (
     orderedDonations,
     donationHabilityConfig.limitPerYear
   );
-
   return canUserDonateAtInterval && canUserDonateAtYearLimit;
 };
 
