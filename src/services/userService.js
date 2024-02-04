@@ -203,16 +203,21 @@ const resetPassword = async (id, newPassword) => {
 const getUserFullData = async (id) => {
   const foundUser = await user.findByPk(id, {
     attributes: user.publicFields,
-    include: [{ association: user.associations.donations, nested: true }],
+    include: [
+      { association: user.associations.donations, nested: true },
+      { association: user.associations.addresses },
+    ],
     order: [[user.associations.donations, "donationDate", "DESC"]],
   });
 
   const donations = foundUser.donations;
+  const addresses = foundUser.addresses;
   if (!foundUser) throw new UserNotFoundError();
 
   return {
     ...foundUser.publicDataValues(),
     donations,
+    addresses,
   };
 };
 
