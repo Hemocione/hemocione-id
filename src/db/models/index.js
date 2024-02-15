@@ -20,6 +20,8 @@ pg.types.setTypeParser(1114, "text", function (text) {
   return text;
 });
 
+console.log("Connecting to database with config: ", JSON.stringify(config));
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
