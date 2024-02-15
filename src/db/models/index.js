@@ -32,6 +32,8 @@ if (config.use_env_variable) {
   );
 }
 
+console.log("Connecting to database with config", JSON.stringify(config));
+
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
