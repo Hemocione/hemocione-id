@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       "id",
       "givenName",
       "surName",
+      "document",
       "phone",
       "bloodType",
       "birthDate",
@@ -22,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       "gender",
       "isAdmin",
     ];
-
+    
     static associate(models) {
       this.hasMany(models.userAddress, { as: "addresses" });
       this.hasMany(models.userDonation, { as: "donations" });
