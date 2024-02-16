@@ -21,6 +21,7 @@ const signUser = (user, expires = "7d") => {
       email: user.email,
       phone: user.phone,
       gender: user.gender,
+      document: user.document,
     },
     expires
   );
