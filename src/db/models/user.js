@@ -130,10 +130,6 @@ module.exports = (sequelize, DataTypes) => {
             }
           },
         },
-        unique: {
-          args: true,
-          msg: "CPF já cadastrado",
-        },
         allowNull: true,
       },
       phone: DataTypes.STRING,
@@ -159,6 +155,11 @@ module.exports = (sequelize, DataTypes) => {
           if (userRawDocument)
             user.document = userRawDocument.replace(/[^0-9]/g, "");
           if (userRawDocument === "") user.document = null;
+
+          const userRawPhone = user.phone?.trim();
+          if (userRawPhone)
+            user.phone = userRawPhone.replace(/[^0-9]/g, "");
+          if (userRawPhone.length === 11) user.phone = `+55${userRawPhone}`;
         },
       },
       sequelize,
