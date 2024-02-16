@@ -160,6 +160,9 @@ module.exports = (sequelize, DataTypes) => {
           if (userRawPhone)
             user.phone = userRawPhone.replace(/[^0-9]/g, "");
           if (userRawPhone.length === 11) user.phone = `+55${userRawPhone}`;
+
+          const userRawEmail = user.email?.trim();
+          if (userRawEmail) user.email = userRawEmail.toLowerCase(); // Lowercase email before saving
         },
       },
       sequelize,
