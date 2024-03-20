@@ -12,6 +12,8 @@
   "author": "Hemocione INC.",
   "license": "ISC",
   "dependencies": {
+    "@bugsnag/js": "^7.22.4",
+    "@bugsnag/plugin-express": "^7.19.0",
     "@sendgrid/mail": "^8.1.0",
     "@sequelize/core": "^7.0.0-alpha.25",
     "bcrypt": "^5.0.1",

@@ -3,10 +3,12 @@ const fs = require("fs");
 const cors = require("cors");
 const helmet = require("helmet");
 const requestsLogging = require("../middlewares/requestsLogging");
+
 const {
   errorsMiddleware,
   notFoundRoute,
 } = require("../middlewares/errorsMiddleware");
+const { bugsnagMiddlewares } = require("../middlewares/bugsnag");
 const xssEscape = require("../middlewares/xssEscape");
 const contentType = require("../middlewares/contentType");
 
@@ -17,6 +19,8 @@ const init = ({ expressApp: app }) =>
       origin: "*",
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     };
+    app.use(bugsnagMiddlewares.requestHandler);
+
     app.use(requestsLogging);
     app.use(cors(corsOptions));
     app.use(contentType);
@@ -35,6 +39,7 @@ const init = ({ expressApp: app }) =>
       reject(err);
     }
 
+    app.use(bugsnagMiddlewares.errorHandler);
     app.use(errorsMiddleware);
     app.use(notFoundRoute);
     resolve();
