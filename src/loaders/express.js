@@ -8,7 +8,7 @@ const {
   errorsMiddleware,
   notFoundRoute,
 } = require("../middlewares/errorsMiddleware");
-const { bugsnagMiddlewares } = require("../middlewares/bugsnag");
+const bugsnagMiddlewares = require("../middlewares/bugsnag");
 const xssEscape = require("../middlewares/xssEscape");
 const contentType = require("../middlewares/contentType");
 
