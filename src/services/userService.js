@@ -34,6 +34,10 @@ const getUserRegistrationData = (userData) => {
 
   // ensures that the phone number is always in the same format
   userRegistrationData.phone = phoneCompleted;
+  console.log({
+    userRegistrationData,
+    phoneCompleted
+  })
 
   if (
     userRegistrationData.address &&
