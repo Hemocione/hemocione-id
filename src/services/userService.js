@@ -30,10 +30,10 @@ const getUserRegistrationData = (userData) => {
     "address",
   ];
   const userRegistrationData = selectObjKeys(userData, desiredKeys);
-  const completePhone = completePhone(userData.phone);
+  const phoneCompleted = completePhone(userData.phone);
 
   // ensures that the phone number is always in the same format
-  userRegistrationData.phone = completePhone;
+  userRegistrationData.phone = phoneCompleted;
 
   if (
     userRegistrationData.address &&
