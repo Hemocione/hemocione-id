@@ -3,6 +3,7 @@ const { Model } = require("sequelize");
 
 const { validateCPF } = require("../../utils/cpf");
 const { selectObjKeys } = require("../../utils/selectObjKeys");
+const { completePhone } = require("../../utils/completePhone");
 
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
@@ -157,9 +158,7 @@ module.exports = (sequelize, DataTypes) => {
           if (userRawDocument === "") user.document = null;
 
           const userRawPhone = user.phone?.trim();
-          if (userRawPhone)
-            user.phone = userRawPhone.replace(/[^0-9]/g, "");
-          if (userRawPhone.length === 11) user.phone = `+55${userRawPhone}`;
+          if (userRawPhone) user.phone = completePhone(userRawPhone); // Complete phone before saving
 
           const userRawEmail = user.email?.trim();
           if (userRawEmail) user.email = userRawEmail.toLowerCase(); // Lowercase email before saving

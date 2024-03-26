@@ -1,0 +1,11 @@
+function completePhone(phone) {
+  if (phone.startsWith("+55") && phone.length === 14) return phone;
+
+  phone = phone.replace(/\D/g, "");
+  if (phone.length === 11) phone = `+55${phone}`;
+  if (phone.length === 13) phone = `+${phone}`;
+
+  return phone;
+}
+
+module.exports = { completePhone };
