@@ -13,6 +13,7 @@ const {
 } = require("../errors/authErrors");
 const { ValidationError } = require("sequelize");
 const _ = require("lodash");
+const { completePhone } = require("../utils/completePhone");
 
 const getUserRegistrationData = (userData) => {
   // not using image for now
@@ -29,6 +30,10 @@ const getUserRegistrationData = (userData) => {
     "address",
   ];
   const userRegistrationData = selectObjKeys(userData, desiredKeys);
+  const completePhone = completePhone(userData.phone);
+
+  // ensures that the phone number is always in the same format
+  userRegistrationData.phone = completePhone;
 
   if (
     userRegistrationData.address &&
@@ -50,8 +55,6 @@ const getUserRegistrationData = (userData) => {
 const register = async (userData) => {
   const { userRegistrationData, queryOptions } =
     getUserRegistrationData(userData);
-
-  console.log(queryOptions);
 
   try {
     const createdUser = await user.create(
